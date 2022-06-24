@@ -11,7 +11,7 @@ class DateSortTest {
 
 
     @Test
-    void test() {
+    void test1() {
         String[] dates = {
                 "07-05-1990",
                 "28-01-2010",
@@ -27,14 +27,19 @@ class DateSortTest {
                 "15-01-2010",
                 "28-01-2010",
         };
+
         Comparator<String> comparator = (d1, d2) -> {
-            if (d1.substring(6, 10).compareTo(d2.substring(6,10)) < 0){
+            int compareYear = d1.substring(6, 10).compareTo(d2.substring(6,10));
+            int compareMonth = d1.substring(3, 5).compareTo(d2.substring(3,5));
+            int compareDay = d1.substring(0, 2).compareTo(d2.substring(0,2));
+
+            if (compareYear < 0){
                 return -1;
             }
-            if (d1.substring(3, 5).compareTo(d2.substring(3,5)) < 0){
-                return 1;
+            if (compareMonth < 0 && compareYear ==0){
+                return -1;
             }
-            if (d1.substring(0, 2).compareTo(d2.substring(0,2)) < 0){
+            if (compareDay < 0 && compareMonth ==0){
                 return -1;
             }
             return 0;
@@ -47,6 +52,64 @@ class DateSortTest {
         assertArrayEquals(expected, dates);
 
 //        System.out.println(dateParser("15-11-2010",0, 2));
+
+    }
+
+
+    @Test
+    void testLonger () {
+
+
+        String[] dates = {
+                "12/23/2020",
+                "11/04/2031",
+                "07-05-1990",
+                "28-01-2010",
+                "25/12/2029",
+                "08/12/2029",
+                "05/28/2022",
+                "11/03/2031",
+                "11-08-1990",
+                "15-01-2010",
+                "16/06/1971"
+        };
+
+        String[] expected = {
+                "16/06/1971",
+                "07-05-1990",
+                "11-08-1990",
+                "15-01-2010",
+                "28-01-2010",
+                "12/23/2020",
+                "05/28/2022",
+                "08/12/2029",
+                "25/12/2029",
+                "11/03/2031",
+                "11/04/2031",
+
+        };
+        Comparator<String> comparator = (d1, d2) -> {
+            int compareYear = d1.substring(6, 10).compareTo(d2.substring(6,10));
+            int compareMonth = d1.substring(3, 5).compareTo(d2.substring(3,5));
+            int compareDay = d1.substring(0, 2).compareTo(d2.substring(0,2));
+
+            if (compareYear < 0){
+                return -1;
+            }
+            if (compareMonth < 0 && compareYear ==0){
+                return -1;
+            }
+            if (compareDay < 0 && compareMonth ==0){
+                return -1;
+            }
+            return 0;
+        };
+
+        printArray(dates, "Before Sorting");
+        Arrays.sort(dates, comparator);
+        printArray(dates, "After Sorting:");
+        printArray(expected, "Expected:");
+        assertArrayEquals(expected, dates);
 
     }
 
